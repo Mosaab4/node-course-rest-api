@@ -38,6 +38,7 @@ exports.createPost = (req, res, next) => {
     if (!errors.isEmpty()) {
         const error = new Error('Validation Failed')
         error.statusCode = 422
+        errors.data = errors.array()
         throw error
         // return res
         //     .status(422)
@@ -108,6 +109,7 @@ exports.updatePost = (req, res, next) => {
     if (!errors.isEmpty()) {
         const error = new Error('Validation Failed')
         error.statusCode = 422
+        errors.data = errors.array()
         throw error
     }
 
