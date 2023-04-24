@@ -47,7 +47,7 @@ app.use((err, req, res, next) => {
     console.log(err)
     const status = err.statusCode
     const message = err.message
-    const data = error.data
+    const data = err.data
 
     res.status(status).json({message: message, data: data})
 })
