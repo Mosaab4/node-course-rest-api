@@ -43,7 +43,6 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     const email = req.body.email
     const password = req.body.password
-    let loadedUser
 
     try {
         const user = await User.findOne({email: email})
@@ -73,10 +72,10 @@ exports.login = async (req, res, next) => {
 
         res.status(200).json({token: token, userId: user._id.toString()})
     } catch (error) {
-        if (!err.statusCode) {
-            err.statusCode = 500
+        if (!error.statusCode) {
+            error.statusCode = 500
         }
-        next(err)
+        next(error)
     }
 }
 
