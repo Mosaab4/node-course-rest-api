@@ -6,6 +6,8 @@ const multer = require('multer')
 const {graphqlHTTP} = require('express-graphql')
 const graphqlSchema = require('./grqphql/schema')
 const graphqlResolvers = require('./grqphql/resolvers')
+const auth = require('./middleware/is-auth')
+const {clearImage} = require('./util/file')
 
 // const feedRoutes = require('./routes/feed');
 // const authRoutes = require('./routes/auth');
@@ -67,6 +69,28 @@ app.use((req, res, next) => {
 
 // app.use('/feed', feedRoutes);
 // app.use('/auth', authRoutes);
+app.use(auth)
+
+app.put('/post-image', (req, res, next) => {
+    if (!req.isAuth) {
+        const err = new Error('Not authenticated')
+        err.code = 401
+        throw err
+    }
+
+    if (!req.file) {
+        return res.status(200).json({message: 'No file provided!'})
+    }
+
+    if (req.body.oldPath) {
+        clearImage(req.body.oldPath)
+    }
+
+    return res.status(201).json({
+        message: 'File Stored!',
+        filePath: req.file.path
+    })
+})
 
 app.use((err, req, res, next) => {
     console.log(err)
